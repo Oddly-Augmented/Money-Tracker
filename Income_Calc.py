@@ -21,7 +21,7 @@ class IncomeDB:
         if "config" not in self.data:
             self.data["config"] = {
                 "current_year": 2026,
-                "current_job": "Coohills",
+                "current_job": "Defualtjob",
                 "current_rate_base": 20,
                 "cuurent_overtime_rate": 30, 
             }
