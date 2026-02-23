@@ -1,18 +1,28 @@
 {
     "config": {
         "current_year": 2026,
-        "current_job": "Defualtjob",
-        "current_rate_base": 20,
-        "cuurent_overtime_rate": 30
+        "current_job": "Testjob1",
+        "current_rate_base": 234.0,
+        "cuurent_overtime_rate": 351.0
     },
     "2026": {
         "Defualtjob": {
             "totals": {
-                "hours_worked": 7,
-                "gross_pay": 7.0,
-                "taxes_paid": 7.0,
-                "retirement_cont": 7.0,
-                "take_home": 7.0
+                "hours_worked": 65.0,
+                "gross_pay": 23546.0,
+                "taxes_paid": 23.0,
+                "retirement_cont": 234.0,
+                "take_home": 23.0
+            },
+            "pay_rates": []
+        },
+        "Testjob1": {
+            "totals": {
+                "hours_worked": 23459.0,
+                "gross_pay": 183.0,
+                "taxes_paid": 2154.0,
+                "retirement_cont": 1257.0,
+                "take_home": 102.0
             },
             "pay_rates": []
         }

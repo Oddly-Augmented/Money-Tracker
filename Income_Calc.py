@@ -38,7 +38,6 @@ class IncomeDB:
                     "retirement_cont": 0,
                     "take_home": 0,
                 },
-                "pay_rates":[],
             }
 
 # ----- Config: current year/job/rates -----
@@ -57,10 +56,10 @@ class IncomeDB:
         self.saveDB()
 
     def getCurrentBaseRate(self):
-        return self.data["config"]["current_rate"]
+        return self.data["config"]["current_rate_base"]
     
     def setCurrentBaseRate(self, rate):
-        self.data["config"]["current_rate"] = rate
+        self.data["config"]["current_rate_base"] = rate
         self.data["config"]["cuurent_overtime_rate"] = rate * 1.5
         self.saveDB()
 
@@ -104,8 +103,30 @@ if __name__ == "__main__":
                 retirement=float(input("What is the retremnet?: ")),
                 takeHome=float(input("What is your take home?: "))
             )
+        
+        elif startMenu == "2":
+            db.setCurrentBaseRate(rate=float(input("What is your Curent pay rate?: ")))
+        
+        elif startMenu == "3":
+            db.setCurrentYear(year=int(input("What is the curent year?: ")))
+        
+        elif startMenu == "4":
+            db.setCurrentJob(job=str(input("What is your curent job?: ")))
+        
+        elif startMenu == "5":
+            print("Quitting")
             break
-        break
+        else:
+                print(
+            "Invalid choice:\n"
+            "What would you like to do?\n" 
+            "Enter a new pay check (1).\n" 
+            "Change hourly pay (2).\n"
+            "Change year (3).\n"
+            "Change job(4).\n"
+            "Quit (5).\n"
+            )   
+        
             
         
     
