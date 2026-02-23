@@ -1,19 +1,6 @@
 import json
 
-### This class is what my avrage payckeck for 2025 was.
-### This is used to see if im making more than last year
-class income:
-    def __init__(self, hourlyRate, hoursBiWeek, tipsBiWeek, retirementBiWeek, taxTotalBiWeek):
-        self.hourlyRate = hourlyRate
-        self.hoursBiWeek = hoursBiWeek
-        self.tipsBiWeek = tipsBiWeek
-        self.retirementBiWeek = retirementBiWeek
-        self.taxTotalBiWeek = taxTotalBiWeek
-
-    def upDateHourly(self, update):
-        self.hourlyRate = update
-        return(self.hourlyRate)
-    
+### Paycheck calculator for estimating tips and comparing pay cycles
 class IncomeDB:
     def __init__(self, path = "Income_calc.json"):
         self.DB = path
@@ -25,23 +12,7 @@ class IncomeDB:
                 "current_rate_base": 20,
                 "cuurent_overtime_rate": 30, 
             }
-
-    def getCurrentYear(self):
-        return self.data["config"]["current_year"]
-    
-    def setCurrentYear(self, year):
-        self.data["config"]["current_year"] = year
-        self.saveDB()
-
-    def getCurrentJob(self):
-        return self.data["config"]["current_job"]
-    
-    def setCurrentJob(self, job):
-        self.data["config"]["current_job"] = job
-        self.saveDB()
-
-    
-
+# ----- JSON load/save -----       
     def loadDB(self):
         try:
             with open(self.DB, "r") as f:
@@ -53,6 +24,8 @@ class IncomeDB:
         with open(self.DB, "w") as f:
             json.dump(self.data, f, indent=4)
 
+# ----- Ensure year + job -----
+### TODO use something to get the curent year not from user input 
     def ensureYear(self, year, jobName):
         if year not in self.data:
             self.data[year] = {}
@@ -68,18 +41,49 @@ class IncomeDB:
                 "pay_rates":[],
             }
 
-    def updatePayRate(self):
-        self.data["games_played"] += 1
-        self.data["games_won"] += 1
-        self.saveDB()
-    def updateYear(self):
-        self.data["games_played"] += 1
-        self.data["games_lost"] += 1
+# ----- Config: current year/job/rates -----
+    def getCurrentYear(self):
+        return self.data["config"]["current_year"]
+    
+    def setCurrentYear(self, year):
+        self.data["config"]["current_year"] = year
         self.saveDB()
 
+    def getCurrentJob(self):
+        return self.data["config"]["current_job"]
+    
+    def setCurrentJob(self, job):
+        self.data["config"]["current_job"] = job
+        self.saveDB()
+
+    def getCurrentBaseRate(self):
+        return self.data["config"]["current_rate"]
+    
+    def setCurrentBaseRate(self, rate):
+        self.data["config"]["current_rate"] = rate
+        self.data["config"]["cuurent_overtime_rate"] = rate * 1.5
+        self.saveDB()
+
+    def getCurrentOvertimeRate(self):
+        return self.data["config"]["cuurent_overtime_rate"] 
+    
+ # ----- Update totals and pay_rates -----
+    def updateTotals(self, year, jobName, hours, gross, taxes, retirement, takeHome):
+        year = str(year)
+        self.ensureYear(year, jobName)
+        t = self.data[year][jobName]["totals"]
+        t["hours_worked"]  += hours
+        t["gross_pay"] += gross
+        t["taxes_paid"] += taxes
+        t["retirement_cont"] += retirement
+        t["take_home"] += takeHome
+        self.saveDB()
 
 if __name__ == "__main__":
     # payRate = income()
+    db = IncomeDB()
+
+
     while True:
         startMenu = input(
         "What would you like to do?\n" 
@@ -89,7 +93,19 @@ if __name__ == "__main__":
         "Change job(4).\n"
         "Quit (5).\n"
         )
+
+        if startMenu == "1":
+            db.updateTotals(
+                year=db.getCurrentYear(),
+                jobName=db.getCurrentJob(),
+                hours=float(input("How many hours did you work?: ")),
+                gross=float(input("What was your gross pay?: ")),
+                taxes=float(input("What are the taxes?: ")),
+                retirement=float(input("What is the retremnet?: ")),
+                takeHome=float(input("What is your take home?: "))
+            )
+            break
+        break
+            
         
-        payPeriodStart = input("When did the pay Period Start: ")
-        payPeriodEnd = input("When did the pay Period End: ")
-        hoursWorked = input("How many hours did you work:")
+    
